@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "GWBackFinder"
 version = "1.0.0"
-description = "Likelihood-free reconstruction of gravitational-wave backgrounds with LISA (arXiv:2309.08430), pure Python"
+description = "Simulation-based reconstruction of gravitational-wave backgrounds with LISA (arXiv:2309.08430), pure Python"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Androniki Dimitriou" }]

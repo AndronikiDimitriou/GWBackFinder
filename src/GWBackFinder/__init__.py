@@ -1,4 +1,4 @@
-"""GWBackFinder: likelihood-free reconstruction of gravitational-wave backgrounds.
+"""GWBackFinder: simulation-based reconstruction of gravitational-wave backgrounds.
 
 Pure-Python version of https://github.com/AndronikiDimitriou/GWBackFinder.jl
 plus the sbi training code, for https://arxiv.org/abs/2309.08430.

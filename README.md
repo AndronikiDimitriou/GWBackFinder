@@ -1,13 +1,29 @@
-# GWBackFinder
+<p align="center">
+  <img src="docs/logo.svg" alt="GWBackFinder" width="640">
+</p>
 
-Likelihood-free reconstruction of stochastic gravitational-wave backgrounds with LISA,
-from *Fast Likelihood-free Reconstruction of Gravitational Wave Backgrounds*,
+<p align="center">
+  <a href="https://arxiv.org/abs/2309.08430"><img src="https://img.shields.io/badge/arXiv-2309.08430-b31b1b.svg" alt="arXiv"></a>
+  <img src="https://img.shields.io/badge/python-3.9%2B-blue.svg" alt="Python 3.9+">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT license">
+</p>
+
+Simulation-based reconstruction of stochastic gravitational-wave backgrounds with LISA.
+A normalising-flow posterior learns a 26-slope piecewise power law for Ω_GW(f) together with the instrument
+noise, with no assumption on the spectral shape. Once trained, it reconstructs a new data set in about a second.
+
+<p align="center">
+  <img src="docs/example_peak.png" alt="Reconstruction of a peaked GW background" width="760">
+</p>
+<p align="center"><em>A peaked signal injected in mock LISA data (orange) and its blind reconstruction with
+68% / 95% credible bands (blue), using the trained networks in <code>examples/</code>.</em></p>
+
+Paper: *Fast Likelihood-free Reconstruction of Gravitational Wave Backgrounds*,
 A. Dimitriou, D. G. Figueroa, B. Zaldívar ([arXiv:2309.08430](https://arxiv.org/abs/2309.08430)).
 
-The data generation used to live in the Julia package
-[GWBackFinder.jl](https://github.com/AndronikiDimitriou/GWBackFinder.jl). It was called from Python
-through `juliacall` or `os.system("julia ...")`, with one `.jld2` file per simulation. Everything is
-now in Python/NumPy, needs no GPU and no Julia, and simulates straight into arrays.
+This is the pure-Python version of the package. Data generation used to live in the Julia package
+[GWBackFinder.jl](https://github.com/AndronikiDimitriou/GWBackFinder.jl) and was called through `juliacall`.
+Everything now runs in Python/NumPy, with no GPU and no Julia.
 
 ## Install
 
@@ -51,6 +67,19 @@ The networks in `posterior_AA.pkl` were trained with **27** log-spaced edges bet
 0.5 Hz (N_c = 27, as in the paper). The `GWBackFinder.jl` on GitHub has `length=26`. Reconstructing
 with 26 edges shifts every spectrum by about 0.08 dex (half a segment) to higher frequency.
 `binning` and `Simulator` default to 27; `Simulator(n_edges=26)` gives the GitHub Julia behaviour.
+
+## Results with the trained posteriors
+
+Four test signals simulated with the Python code and reconstructed with `posterior_TT.pkl` → `posterior_AA.pkl`
+(`python examples/make_figures.py`):
+
+![reconstructions](docs/reconstructions.png)
+
+Simulation-based calibration of the two networks on 2 × 300 simulations. The TT network is calibrated. The AA
+network is slightly but reproducibly biased: it overestimates the amplitude and underestimates the noise A, while
+its overall coverage stays close to nominal.
+
+![calibration](docs/calibration.png)
 
 ## How to run
 
@@ -112,6 +141,7 @@ python examples/choose_template_signals.py -i peak_parameters.h5 -o peak.h5 -s p
 
 * `examples/AA_channel`, `examples/TT_channel`: generate data and train / resume training, now without Julia
 * `examples/Plots.py`: two-step reconstruction with the shipped posteriors
+* `examples/make_figures.py`: regenerates the two figures above in `docs/`
 * `examples/calibration.py`: simulation-based calibration (SBC) of the trained AA/TT posteriors
 * `examples/choose_template_signals.py`: CLI replacement for `choose_template_signals.jl`
 
