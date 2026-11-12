@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "GWBackFinder"
+version = "1.0.0"
+description = "Likelihood-free reconstruction of gravitational-wave backgrounds with LISA (arXiv:2309.08430), pure Python"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Androniki Dimitriou" }]
+requires-python = ">=3.9"
+dependencies = ["numpy", "tqdm"]
+
+[project.optional-dependencies]
+# sbi 0.22 is the version the shipped posterior_AA.pkl / posterior_TT.pkl were pickled with
+sbi = ["torch", "sbi==0.22.0", "arviz>=0.22,<1"]
+plots = ["matplotlib", "h5py"]
+test = ["pytest", "scipy"]
+all = ["torch", "sbi==0.22.0", "arviz>=0.22,<1", "matplotlib", "h5py", "pytest", "scipy"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

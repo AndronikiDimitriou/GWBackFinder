@@ -1,0 +1,7 @@
+numpy
+tqdm
+torch
+sbi==0.22.0
+matplotlib
+h5py
+arviz>=0.22,<1
