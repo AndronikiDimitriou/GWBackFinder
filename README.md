@@ -1,4 +1,4 @@
-# GWBackFinder (pure Python)
+# GWBackFinder
 
 Likelihood-free reconstruction of stochastic gravitational-wave backgrounds with LISA,
 from *Fast Likelihood-free Reconstruction of Gravitational Wave Backgrounds*,
