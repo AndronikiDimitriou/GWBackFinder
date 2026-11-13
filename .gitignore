@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+sbi-logs/
+*.egg-info/
+.pytest_cache/
+examples/**/data_*.npz
+examples/**/train_*.pkl
