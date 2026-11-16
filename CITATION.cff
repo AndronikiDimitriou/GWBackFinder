@@ -4,6 +4,7 @@ title: "GWBackFinder: simulation-based reconstruction of gravitational-wave back
 version: 1.0.0
 date-released: 2026-11-16
 license: MIT
+doi: 10.5281/zenodo.24285804
 repository-code: "https://github.com/AndronikiDimitriou/GWBackFinder"
 authors:
   - family-names: Dimitriou

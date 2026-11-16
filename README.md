@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/badge/python-3.9%2B-blue.svg" alt="Python 3.9+">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT license">
   <a href="https://github.com/AndronikiDimitriou/GWBackFinder/actions/workflows/tests.yml"><img src="https://github.com/AndronikiDimitriou/GWBackFinder/actions/workflows/tests.yml/badge.svg" alt="tests"></a>
+  <a href="https://doi.org/10.5281/zenodo.24285804"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24285804.svg" alt="DOI"></a>
 </p>
 
 Simulation-based reconstruction of stochastic gravitational-wave backgrounds with LISA.
