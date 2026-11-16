@@ -1,0 +1,32 @@
+name: notebooks
+# Runs every tutorial notebook on a fresh machine, as an external user would.
+# Started by hand (Actions tab -> notebooks -> Run workflow); takes a few minutes.
+on:
+  workflow_dispatch:
+jobs:
+  run-notebooks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - name: Install (pinned versions, CPU torch)
+        run: |
+          python -m pip install --upgrade pip
+          pip install --extra-index-url https://download.pytorch.org/whl/cpu \
+            numpy==1.26.3 scipy==1.12.0 matplotlib==3.8.2 h5py==3.12.1 tqdm==4.66.2 \
+            torch==2.5.1 sbi==0.22.0 nflows==0.14 pyknos==0.16.0 arviz==0.23.1 \
+            ipykernel==6.29.0 nbconvert==7.16.6
+          pip install -e . --no-deps
+      - name: Run notebooks
+        working-directory: examples
+        run: |
+          for nb in 0*.ipynb; do
+            echo "::group::$nb"
+            jupyter nbconvert --to notebook --execute "$nb" --output "/tmp/executed_$nb" \
+              --ExecutePreprocessor.timeout=3000
+            echo "::endgroup::"
+          done
