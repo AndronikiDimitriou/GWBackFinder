@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "GWBackFinder: simulation-based reconstruction of gravitational-wave backgrounds with LISA"
+version: 1.0.0
+date-released: 2026-11-16
+license: MIT
+repository-code: "https://github.com/AndronikiDimitriou/GWBackFinder"
+authors:
+  - family-names: Dimitriou
+    given-names: Androniki
+preferred-citation:
+  type: article
+  title: "Fast Likelihood-free Reconstruction of Gravitational Wave Backgrounds"
+  authors:
+    - family-names: Dimitriou
+      given-names: Androniki
+    - family-names: Figueroa
+      given-names: Daniel G.
+    - family-names: Zaldívar
+      given-names: Bryan
+  year: 2023
+  identifiers:
+    - type: other
+      value: "arXiv:2309.08430"
+  url: "https://arxiv.org/abs/2309.08430"
