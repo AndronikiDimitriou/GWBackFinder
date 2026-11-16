@@ -3,7 +3,7 @@
 
 * docs/reconstructions.png - four test signals reconstructed with the trained
   posteriors (two-step TT -> P, AA | P)
-* docs/calibration.png     - simulation-based calibration (SBC) of the AA and TT networks
+* docs/calibration.png     - coverage of the AA and TT networks (simulation-based calibration)
 
 Run from the repository root:  python examples/make_figures.py
 Takes a few minutes on a laptop (mostly the calibration part).
@@ -79,55 +79,24 @@ XT = torch.tensor(sim.simulate_TT_batch(P_true, seed=1, n_jobs=os.cpu_count()))
 RT = np.array([(posterior_TT.sample((S,), x=XT[i], show_progress_bars=False).numpy().ravel() < P_true[i, 0]).mean()
                for i in range(N)])
 
-names = [str(i) for i in range(26)] + ["amp", "A"]
 plt.rcParams.update({"axes.spines.top": False, "axes.spines.right": False})
-fig = plt.figure(figsize=(12, 8.2))
-gs = fig.add_gridspec(2, 3, height_ratios=[1, 1.05], hspace=0.42, wspace=0.28)
-
-ax = fig.add_subplot(gs[0, :])
-se = np.sqrt(1 / 12 / N)
-ax.axhspan(0.5 - 2 * se, 0.5 + 2 * se, color=GRID, lw=0, label=f"±2σ expected if calibrated ({N} sims)")
-ax.axhline(0.5, color=MUTED, lw=1)
-ax.errorbar(np.arange(28), R.mean(0), yerr=2 * se, fmt="o", ms=4.5, color=BLUE, capsize=0, label="AA network")
-ax.set_xticks(np.arange(28))
-ax.set_xticklabels(names)
-ax.set_xlabel("parameter (slopes 0–25, amplitude, noise A)")
-ax.set_ylabel("mean SBC rank")
-ax.set_title("AA network: mean rank of the true value among posterior samples (ideal 0.5)", loc="left", fontsize=10)
-ax.grid(axis="y", color=GRID, lw=0.6)
-ax.legend(frameon=False, fontsize=8, loc="upper left", ncol=2)
-
-ax = fig.add_subplot(gs[1, 0])
+fig, ax = plt.subplots(figsize=(5.2, 5))
 lv = np.linspace(0.01, 0.99, 50)
 band = 1.96 * np.sqrt(lv * (1 - lv) / N)
 ax.fill_between(lv, lv - band, lv + band, color=GRID, lw=0, label="95% band, calibrated")
 cov = lambda r: [((r > (1 - l) / 2) & (r < (1 + l) / 2)).mean() for l in lv]
 for j in range(26):
-    ax.plot(lv, cov(R[:, j]), color="#b9b8b1", lw=0.8, label="slopes" if j == 0 else None)
-ax.plot(lv, cov(R[:, 26]), color=BLUE, lw=2, label="amplitude")
-ax.plot(lv, cov(R[:, 27]), color=ORANGE, lw=2, label="noise A")
-ax.plot(lv, cov(RT), color=INK, lw=1.4, ls="--", label="TT network (P)")
+    ax.plot(lv, cov(R[:, j]), color="#b9b8b1", lw=0.8, label="AA: slopes" if j == 0 else None)
+ax.plot(lv, cov(R[:, 26]), color=BLUE, lw=2, label="AA: amplitude")
+ax.plot(lv, cov(R[:, 27]), color=ORANGE, lw=2, label="AA: noise A")
+ax.plot(lv, cov(RT), color=INK, lw=1.4, ls="--", label="TT: noise P")
 ax.plot([0, 1], [0, 1], color=MUTED, lw=0.8)
 ax.set_xlim(0, 1)
 ax.set_ylim(0, 1)
 ax.set_xlabel("credible level")
-ax.set_ylabel("fraction of truths inside")
-ax.set_title(f"Coverage ({N} sims)", loc="left", fontsize=10)
-ax.legend(frameon=False, fontsize=7.5, loc="upper left")
-
-for k, (j, c, t) in enumerate([(26, BLUE, "amplitude"), (27, ORANGE, "noise A")]):
-    ax = fig.add_subplot(gs[1, 1 + k])
-    nb = 15
-    e = N / nb
-    s = np.sqrt(e * (1 - 1 / nb))
-    ax.axhspan(e - 2 * s, e + 2 * s, color=GRID, lw=0)
-    ax.axhline(e, color=MUTED, lw=0.8)
-    h, b = np.histogram(R[:, j], bins=nb, range=(0, 1))
-    ax.bar(b[:-1], h, width=1 / nb, align="edge", color=c, edgecolor="white", linewidth=2)
-    ax.set_xlim(0, 1)
-    ax.set_xlabel("rank of true value")
-    ax.set_title(f"Rank histogram: {t}", loc="left", fontsize=10)
-
-fig.suptitle("Calibration of the trained posteriors (grey = perfectly calibrated)", x=0.06, ha="left", fontsize=12)
+ax.set_ylabel("fraction of true values inside the interval")
+ax.set_title(f"Coverage of the trained networks ({N} simulations)", loc="left", fontsize=10)
+ax.legend(frameon=False, fontsize=8, loc="upper left")
+fig.tight_layout()
 fig.savefig(os.path.join(out_dir, "calibration.png"), dpi=140, bbox_inches="tight")
 print("saved figures to", os.path.abspath(out_dir))

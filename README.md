@@ -78,7 +78,7 @@ Notebooks in [`examples/`](examples/), saved with their outputs so they can be r
 |---|---|
 | [01 Reconstruction](examples/01_reconstruction.ipynb) | two-step reconstruction (TT → P, AA given P) of the test signals with the trained networks |
 | [02 Simulate and train](examples/02_simulate_and_train.ipynb) | simulating training data and training the TT and AA networks |
-| [03 Calibration](examples/03_calibration.ipynb) | simulation-based calibration of the trained networks |
+| [03 Calibration](examples/03_calibration.ipynb) | coverage (simulation-based calibration) of the trained networks |
 
 ## Data model
 
@@ -119,9 +119,8 @@ Four test signals simulated with the Python code and reconstructed with `posteri
 
 ![reconstructions](docs/reconstructions.png)
 
-Simulation-based calibration of the two networks on 2 × 300 simulations. The TT network is calibrated. The AA
-network is slightly but reproducibly biased: it overestimates the amplitude and underestimates the noise A, while
-its overall coverage stays close to nominal.
+Coverage of the two networks on 300 simulations from the prior: for every credible level, the fraction of
+true values inside the posterior interval. A calibrated network follows the diagonal.
 
 ![calibration](docs/calibration.png)
 
@@ -134,7 +133,7 @@ The same steps as plain scripts (split into `#%%` cells), run from the repositor
 | `examples/Plots.py` | two-step reconstruction with the shipped posteriors (notebook 01) |
 | `examples/TT_channel/generate_data_and_train_TT_channel.py`, `examples/AA_channel/generate_data_and_train_AA_channel.py` | simulate and train (notebook 02); set `n_simulations` (~1e5 for real training) |
 | `examples/TT_channel/resume_training_noise.py`, `examples/AA_channel/resume_training_signal.py` | continue training |
-| `examples/calibration.py` | SBC of the trained networks (notebook 03) |
+| `examples/calibration.py` | per-parameter SBC ranks of the trained networks |
 | `examples/make_figures.py` | regenerates the two figures above in `docs/` |
 | `examples/choose_template_signals.py -i params.h5 -o out.h5 -s peak` | generate test data to a file (`params.h5`: datasets `parameters_signal`, `parameters_noise` = `[P, A]`) |
 
