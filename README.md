@@ -25,6 +25,18 @@ This is the pure-Python version of the package. Data generation used to live in 
 [GWBackFinder.jl](https://github.com/AndronikiDimitriou/GWBackFinder.jl) and was called through `juliacall`.
 Everything now runs in Python/NumPy, with no GPU and no Julia.
 
+## Companion package: cosmic strings with astrophysical foregrounds
+
+[**GWBackFinder-foregrounds**](https://github.com/AndronikiDimitriou/GWBackFinder-foregrounds) applies
+simulation-based inference to cosmic-string backgrounds in LISA in the presence of the astrophysical
+foregrounds (galactic and extragalactic white dwarfs, SOBHBs, EMRIs, MBHBs). Where GWBackFinder reconstructs
+the spectral shape model-independently, the companion package infers the string tension Gμ jointly with
+the LISA noise and the foreground amplitudes, with MCMC and Fisher cross-checks. It contains the code,
+trained posteriors and figures of *Cosmic string gravitational wave backgrounds at LISA: II. Reconstruction
+of conventional signals over astrophysical foregrounds* ([arXiv:2607.15219](https://arxiv.org/abs/2607.15219)).
+
+The two packages are installed separately (they use different versions of `sbi`).
+
 ## Install
 
 ```bash
