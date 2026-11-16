@@ -41,12 +41,36 @@ The two packages are installed separately (they use different versions of `sbi`)
 
 ```bash
 pip install -e ".[all]"          # numpy, torch, sbi==0.22.0, arviz<1, matplotlib, h5py, pytest
-pytest                           # runs the tests
+pytest                           # runs the tests (~10 s)
 ```
 
 `sbi==0.22.0` is the version the shipped `posterior_AA.pkl` / `posterior_TT.pkl` were pickled
 with. Load them with `GWBackFinder.posterior.load_posterior`. It also handles the old
 `src.GWBackFinder` import path and GPU-trained pickles on CPU-only machines.
+
+## Quick start
+
+```python
+from GWBackFinder import Simulator
+from GWBackFinder.posterior import load_posterior, sample_two_step
+
+sim = Simulator()
+Data_AA, Data_TT, _, _ = sim.different_signals("peak", [-9.0, 0.002, 0.2], (15.0, 3.0), rng=0)
+samples, samples_P = sample_two_step(load_posterior("examples/AA_channel/posterior_AA.pkl"),
+                                     load_posterior("examples/TT_channel/posterior_TT.pkl"),
+                                     Data_AA, Data_TT, n_samples=500)
+```
+
+## Tutorials
+
+Notebooks in [`examples/`](examples/), saved with their outputs so they can be read on GitHub
+(run them from the `examples/` folder):
+
+| Notebook | What it shows |
+|---|---|
+| [01 Reconstruction](examples/01_reconstruction.ipynb) | two-step reconstruction (TT → P, AA given P) of the test signals with the trained networks |
+| [02 Simulate and train](examples/02_simulate_and_train.ipynb) | simulating training data and training the TT and AA networks |
+| [03 Calibration](examples/03_calibration.ipynb) | simulation-based calibration of the trained networks |
 
 ## Data model
 
@@ -93,69 +117,18 @@ its overall coverage stays close to nominal.
 
 ![calibration](docs/calibration.png)
 
-## How to run
+## Scripts
 
-All commands are run from the repository folder after `pip install -e ".[all]"`.
+The same steps as plain scripts (split into `#%%` cells), run from the repository folder:
 
-**0. Check the installation**
-
-```bash
-pytest                      # all tests should pass (~10 s)
-```
-
-**1. Reconstruct a signal with the trained posteriors (no training needed)**
-
-The trained posteriors are `examples/AA_channel/posterior_AA.pkl` and `examples/TT_channel/posterior_TT.pkl`.
-
-```bash
-python examples/Plots.py
-```
-
-It does four things:
-- simulates a test signal (power law by default; change `signal = ...` to `peak`, `wiggly`, `bpowerlaw`, `dpeak` or `three_peaks`);
-- samples the noise parameter P from the TT posterior;
-- samples the 26 slopes and amplitude from the AA posterior, given P;
-- plots the reconstructed spectrum with its 68%/95% bands against the injected signal, the noise curves and the PLS.
-
-The scripts are split into `#%%` cells, so you can also run them cell by cell in VS Code or Jupyter.
-
-**2. Train new posteriors (optional)**
-
-Train the TT (noise) network first, then the AA (signal) network:
-
-```bash
-python examples/TT_channel/generate_data_and_train_TT_channel.py   # -> examples/TT_channel/posterior_noise.pkl
-python examples/AA_channel/generate_data_and_train_AA_channel.py   # -> examples/AA_channel/posterior.pkl
-```
-
-Set `n_simulations` at the top of each script (100 by default for a quick test, ~1e5 for real
-training). Simulations run in parallel on all CPU cores, at ~0.1 s each per core. The simulated
-data are also saved to `data_TT.npz` / `data_AA.npz` so they can be reused.
-
-To continue training for more epochs:
-
-```bash
-python examples/TT_channel/resume_training_noise.py
-python examples/AA_channel/resume_training_signal.py
-```
-
-To use newly trained posteriors in step 1, change the two `load_posterior(...)` paths in `examples/Plots.py`.
-
-**3. Generate test data to a file (optional)**
-
-```bash
-python examples/choose_template_signals.py -i peak_parameters.h5 -o peak.h5 -s peak
-```
-
-`peak_parameters.h5` must contain datasets `parameters_signal` and `parameters_noise` (= `[P, A]`).
-
-## Examples
-
-* `examples/AA_channel`, `examples/TT_channel`: generate data and train / resume training, now without Julia
-* `examples/Plots.py`: two-step reconstruction with the shipped posteriors
-* `examples/make_figures.py`: regenerates the two figures above in `docs/`
-* `examples/calibration.py`: simulation-based calibration (SBC) of the trained AA/TT posteriors
-* `examples/choose_template_signals.py`: CLI replacement for `choose_template_signals.jl`
+| Script | Does |
+|---|---|
+| `examples/Plots.py` | two-step reconstruction with the shipped posteriors (notebook 01) |
+| `examples/TT_channel/generate_data_and_train_TT_channel.py`, `examples/AA_channel/generate_data_and_train_AA_channel.py` | simulate and train (notebook 02); set `n_simulations` (~1e5 for real training) |
+| `examples/TT_channel/resume_training_noise.py`, `examples/AA_channel/resume_training_signal.py` | continue training |
+| `examples/calibration.py` | SBC of the trained networks (notebook 03) |
+| `examples/make_figures.py` | regenerates the two figures above in `docs/` |
+| `examples/choose_template_signals.py -i params.h5 -o out.h5 -s peak` | generate test data to a file (`params.h5`: datasets `parameters_signal`, `parameters_noise` = `[P, A]`) |
 
 ## Julia → Python map
 
