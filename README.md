@@ -6,6 +6,7 @@
   <a href="https://arxiv.org/abs/2309.08430"><img src="https://img.shields.io/badge/arXiv-2309.08430-b31b1b.svg" alt="arXiv"></a>
   <img src="https://img.shields.io/badge/python-3.9%2B-blue.svg" alt="Python 3.9+">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT license">
+  <a href="https://github.com/AndronikiDimitriou/GWBackFinder/actions/workflows/tests.yml"><img src="https://github.com/AndronikiDimitriou/GWBackFinder/actions/workflows/tests.yml/badge.svg" alt="tests"></a>
 </p>
 
 Simulation-based reconstruction of stochastic gravitational-wave backgrounds with LISA.
@@ -42,6 +43,12 @@ The two packages are installed separately (they use different versions of `sbi`)
 ```bash
 pip install -e ".[all]"          # numpy, torch, sbi==0.22.0, arviz<1, matplotlib, h5py, pytest
 pytest                           # runs the tests (~10 s)
+```
+
+With exactly the versions everything was tested with:
+
+```bash
+conda env create -f environment.yml && conda activate gwbackfinder
 ```
 
 `sbi==0.22.0` is the version the shipped `posterior_AA.pkl` / `posterior_TT.pkl` were pickled

@@ -1,0 +1,24 @@
+# Exact versions the package, its tests and the notebooks were run with.
+#   conda env create -f environment.yml && conda activate gwbackfinder
+name: gwbackfinder
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cpu
+      - numpy==1.26.3
+      - scipy==1.12.0
+      - matplotlib==3.8.2
+      - h5py==3.12.1
+      - tqdm==4.66.2
+      - torch==2.5.1
+      - sbi==0.22.0          # posterior_AA.pkl / posterior_TT.pkl load with this version only
+      - nflows==0.14
+      - pyknos==0.16.0
+      - arviz==0.23.1
+      - pytest==8.3.3
+      - ipykernel==6.29.0
+      - nbconvert==7.16.6
+      - -e .
