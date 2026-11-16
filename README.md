@@ -61,7 +61,7 @@ X = sim.simulate_AA_batch(thetas, seed=0, n_jobs=-1)   # many at once, in parall
 Data_AA, Data_TT, logf_AA, logf_TT = sim.different_signals("powerlaw", [-10, 0.6], (15, 3))
 ```
 
-### Breakpoints: 27 edges, not 26
+### Breakpoints: 27 edges
 
 The networks in `posterior_AA.pkl` were trained with **27** log-spaced edges between 3e-5 and
 0.5 Hz (N_c = 27, as in the paper). The `GWBackFinder.jl` on GitHub has `length=26`. Reconstructing
